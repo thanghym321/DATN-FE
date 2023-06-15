@@ -1,0 +1,94 @@
+<!-- Main sidebar -->
+
+<div class="sidebar-content">
+
+  <!-- User menu -->
+  <div class="sidebar-user">
+      <div class="category-content">
+          <div class="media">
+              <a href="#" class="media-left"><img src="{{user.avatar}}" class="img-circle img-sm"
+                      alt=""></a>
+              <div class="media-body">
+                  <span class="media-heading text-semibold">{{user.name}}</span>
+                  <div class="text-size-mini text-muted">
+                      <i class="icon-pin text-size-small"></i> &nbsp;{{user.address}}
+                  </div>
+              </div>
+
+              <div class="media-right media-middle">
+                  <ul class="icons-list">
+                      <li>
+                          <a href="#"><i class="icon-cog3"></i></a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- /user menu -->
+
+
+  <!-- Main navigation -->
+  <div class="sidebar-category sidebar-category-visible">
+      <div class="category-content no-padding">
+          <ul class="navigation navigation-main navigation-accordion">
+
+              <!-- Main -->
+              <li class="navigation-header"><span></span> <i class="icon-menu" title="Main pages"></i></li>
+              <li class="active"><a [routerLink]="['/manage/']"><i class="icon-home4"></i> <span>Trang chủ</span></a></li>
+              <li *ngIf="user.role==1 || user.role==0">
+                <a ><i class="icon-pencil7"></i> <span>Quản lý thông tin</span></a>
+                <ul>
+                  <li *ngIf="user.role==0"><a [routerLink]="['/user/manage-user']">Quản lý người dùng</a></li>
+                  <li *ngIf="user.role==0"><a [routerLink]="['/manage/campus']">Quản lý cơ sở</a></li>
+                  <li *ngIf="user.role==0"><a [routerLink]="['/manage/building']">Quản lý tòa nhà</a></li>
+                  <li><a [routerLink]="['/manage/room']">Quản lý phòng</a></li>
+                  <li><a [routerLink]="['/manage/electricity-water-rate']">Quản lý điện nước</a></li>
+                  <li><a [routerLink]="['/manage/meter-reading']">Quản lý chỉ số điện nước</a></li>
+                  <li><a [routerLink]="['/manage/service']">Quản lý dịch vụ</a></li>
+                </ul>
+              </li>
+
+              <li *ngIf="user.role==1 || user.role==0">
+                <a ><i class="icon-pencil7"></i> <span>Quản lý đăng ký</span></a>
+                <ul>
+                  <li><a [routerLink]="['/manage/room-registration']">Quản lý đăng ký phòng</a></li>
+                  <li><a [routerLink]="['/manage/wait-room-registration']">Danh sách chờ duyệt</a></li>
+                </ul>
+              </li>
+              <li *ngIf="user.role==1 || user.role==0">
+                <a ><i class="icon-pencil7"></i> <span>Quản lý Thanh toán</span></a>
+                <ul>
+                  <li><a [routerLink]="['/manage/room-invoice']">Quản lý thanh toán</a></li>
+                </ul>
+              </li>
+              <li *ngIf="user.role==2">
+                <a ><i class="icon-pencil7"></i> <span>Thông tin cá nhân</span></a>
+                <ul>
+                  <li><a [routerLink]="['/student/student-profile']">Thông tin cá nhân</a></li>
+                  <li><a [routerLink]="['/student/room-information']">Thông tin phòng đang ở</a></li>
+                </ul>
+              </li>
+              <li *ngIf="user.role==2">
+                <a ><i class="icon-pencil7"></i> <span>Đăng ký phòng</span></a>
+                <ul>
+                  <li><a [routerLink]="['/student/search-room']">Danh sách phòng</a></li>
+                  <li><a [routerLink]="['/student/list-room-registration']">Quản lý đăng ký phòng</a></li>
+                </ul>
+              </li>
+              <li *ngIf="user.role==2">
+                <a ><i class="icon-pencil7"></i> <span>Quản lý thanh toán</span></a>
+                <ul>
+                  <li><a [routerLink]="['/student/list-room-invoice']">Quản lý thanh toán</a></li>
+                  <li><a [routerLink]="['/student/wait-room-invoice']">Danh sách chưa thanh toán</a></li>
+                </ul>
+              </li>
+            <li><a (click)="Logout()">Đăng xuất</a></li>
+          </ul>
+      </div>
+  </div>
+  <!-- /main navigation -->
+
+</div>
+
+<!-- /main sidebar -->

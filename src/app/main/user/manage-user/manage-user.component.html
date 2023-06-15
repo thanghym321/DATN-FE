@@ -1,0 +1,337 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold"></span>Quản lý
+				người dùng</h4>
+		</div>
+
+		<div class="heading-elements">
+			<div class="heading-btn-group">
+				<a (click)="createModal()" class="btn btn-link btn-float has-text"><i
+						class="icon-plus22 text-primary"></i><span>Thêm người dùng</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a href=""><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Quản lý người dùng</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+<!-- Content area -->
+<div class="content">
+	<div class="row">
+		<div class="col-md-12">
+
+			<!-- Basic layout-->
+			<form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="LoadData()" >
+				<div class="panel panel-flat">
+					<div class="panel-heading">
+						<h5 class="panel-title">Tìm kiếm</h5>
+					</div>
+
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="col-lg-2 control-label" style="text-align:right ;">Họ tên:</label>
+							<div class="col-lg-8">
+								<input formControlName="txt_name" type="text" class="form-control" placeholder="Họ tên">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label" style="text-align:right ;">Tài khoản:</label>
+							<div class="col-lg-3">
+								<input formControlName="txt_userName" type="text" class="form-control" placeholder="Tài khoản">
+							</div>
+							<label class="col-lg-2 control-label" style="text-align:right ;">Loại quyền:</label>
+							<div class="col-lg-3">
+								<select formControlName="txt_role" class="form-control">
+									<option [value]="-1" selected>Tất cả</option>
+									<option [value]="0">Admin</option>
+									<option [value]="1">Manage</option>
+									<option [value]="2">Student</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-10 text-right">
+							<button type="submit" class="btn btn-primary"><i class="icon-search4 position-right"></i> Tìm kiếm</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!-- /basic layout -->
+		</div>
+	</div>
+
+
+	<!-- Basic datatable -->
+	<div class="panel panel-flat" style="overflow-x: auto;">
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-11">
+          <h5 class="panel-title">DANH SÁCH THÔNG TIN NGƯỜI DÙNG</h5>
+        </div>
+        <div class="col-lg-1">
+          <select class="form-control" (ngModelChange)="loadPageSize($event)" [(ngModel)]="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+          <th>STT</th>
+					<th>Tài khoản</th>
+					<th>Mật khẩu</th>
+					<th>Trạng thái</th>
+          <th>Loại quyền</th>
+          <th>Cơ sở</th>
+          <th>Họ tên</th>
+          <th>Ngày sinh</th>
+          <th>Giới tính</th>
+          <th>Ảnh đại diện</th>
+          <th>Địa chỉ</th>
+          <th>Email</th>
+          <th>Điện thoại</th>
+					<th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_user | paginate: {itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalUser}; let i = index">
+					<td>{{ pageSize * (pageIndex - 1) + (i + 1)}}</td>
+					<td>{{item.userName}}</td>
+					<td>{{item.passWord}}</td>
+          <td>{{item.status | statusLabel: statusMapping}}</td>
+					<td>{{item.role | statusLabel: roleMapping}}</td>
+					<td>{{item.campusId}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.dateOfBirth | date : " dd-MM-yyyy"}}</td>
+					<td>{{item.gender}}</td>
+					<td><img src="{{item.avatar}}" height="100%;" width="100px" alt=""></td>
+					<td>{{item.address}}</td>
+					<td>{{item.email}}</td>
+					<td>{{item.phone}}</td>
+					<td>
+            <tr>
+              <td><button  class="btn btn-info" (click)="openUpdateModal(item.userId)"><i class="icon-pencil7"></i></button></td>
+              <td><button style="margin-left:10px;"  class="btn btn-danger" (click)="onRemove(item.userId)"><i class="icon-trash"></i></button></td>
+            </tr>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+    <div style="text-align: right;">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="loadPageIndex($event)">
+      </pagination-controls>
+    </div>
+	</div>
+	<!-- /basic datatable -->
+</div>
+<!-- /content area -->
+
+
+<!-- Large modal -->
+<div *ngIf="showUpdateModal" class="modal fade" id="createModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="modal-title">{{title}}</h5>
+			</div>
+			<hr>
+			<form *ngIf="doneSetupForm" [formGroup]="frmUser" (ngSubmit)="OnSubmit(frmUser.value)"
+				class="form-horizontal">
+				<div class="modal-body" style="padding-left: 50px !important; padding-right:50px !important;">
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Tài khoản<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_userName" type="text" class="form-control"
+								placeholder="Tài khoản">
+							<div *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+								<div *ngIf="userName.errors?.['required']" style="color:red ;">Tài khoản không được rỗng
+								</div>
+								<div *ngIf="userName.errors?.['minlength']" style="color:red ;">
+									Tài khoản không được nhỏ hơn 5 ký tự
+								</div>
+								<div *ngIf="userName.errors?.['maxlength']" style="color:red ;">
+									Tài khoản không được lớn hơn 50 ký tự
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Mật khẩu<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_passWord" type="text" class="form-control"
+								placeholder="Mật khẩu">
+							<div *ngIf="passWord.invalid && (passWord.dirty || passWord.touched)">
+								<div *ngIf="passWord.errors?.['required']" style="color:red ;">Mật khẩu là bắt buộc</div>
+								<div *ngIf="passWord.errors?.['passWord']" style="color:red ;"> Độ dài mật khẩu tối thiệu
+									phải là 6 ký tự và
+									phải chứa ký tự đặc biệt @#!$%&*</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Nhập lại mật khẩu<span
+								style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_rewrite_Password" type="text" class="form-control"
+								placeholder="Nhập lại mật khẩu">
+							<div *ngIf="rewrite_Password.invalid && (rewrite_Password.dirty || rewrite_Password.touched)">
+								<div *ngIf="rewrite_Password.errors?.['required']" style="color:red ;">Xác nhận lại mật
+									khẩu là bắt buộc</div>
+								<div *ngIf="rewrite_Password.errors?.['matching']" style="color:red ;">Xác thực lại mật
+									khẩu không đúng</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Trạng thái<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+              <select formControlName="txt_status" class="form-control">
+                <option value="" disabled selected>Chọn trạng thái tài khoản</option>
+                <option value="0">Đang hoạt động</option>
+                <option value="1">Bị khóa</option>
+              </select>
+							<div *ngIf="status.invalid && (status.dirty || status.touched)">
+                <div *ngIf="status.errors?.['required']" style="color:red ;">Bạn phải chọn trạng thái</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Loại quyền<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<select formControlName="txt_role" class="form-control">
+								<option value="0">Admin</option>
+                <option value="1">Manage</option>
+								<option value="2">Student</option>
+							</select>
+              <div *ngIf="role.invalid && (role.dirty || role.touched)">
+                <div *ngIf="role.errors?.['required']" style="color:red ;">Bạn phải chọn loại quyền</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Tòa nhà</label>
+						<div class="col-lg-9">
+							<select formControlName="txt_building" class="form-control">
+                <option selected value=null>Không</option>
+                <option *ngFor="let item of list_building" value="{{item.id}}">{{item.name}}</option>
+              </select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Họ tên<span style="color:red ;">*</span></label>
+						<div class="col-lg-9">
+							<input formControlName="txt_name" type="text" class="form-control" placeholder="Họ tên">
+							<div *ngIf="name.invalid && (name.dirty || name.touched)">
+								<div *ngIf="name.errors?.['required']" style="color:red ;">Họ tên không được rỗng</div>
+								<div *ngIf="name.errors?.['minlength']" style="color:red ;">
+									Họ tên không được nhỏ hơn 3 ký tự
+								</div>
+								<div *ngIf="name.errors?.['maxlength']" style="color:red ;">
+									Họ tên không được lớn hơn 250 ký tự
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Ngày sinh<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_dateOfBirth" type="date" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Giới tính<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<label class="radio-inline">
+								<input formControlName="txt_gender" type="radio" class="styled" value="Nam">
+								Nam
+							</label>
+
+							<label class="radio-inline">
+								<input formControlName="txt_gender" type="radio" class="styled"value="Nữ">
+								Nữ
+							</label>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Ảnh:</label>
+						<div class="col-lg-9">
+							<div class="media no-margin-top">
+								<div class="media-left">
+									<img  src="{{avatarPreview}}" style="width: 58px; height: 58px;" class="img-rounded" alt="">
+								</div>
+								<div class="media-body">
+									<input (change)="upload($event)" accept=".jpg,.png,.jpeg,.gif,.bmp,.tif,.tiff"
+										type="file" class="file-styled">
+									<span class="help-block">Định dạng được chấp nhận: gif, png, jpg. Kích thước tệp tối đa 2Mb</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Địa chỉ:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_address" type="text" class="form-control" placeholder="Địa chỉ">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Email:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_email" type="text" class="form-control" placeholder="Email">
+							<div *ngIf="email.invalid && (email.dirty || email.touched)">
+								<div *ngIf="email.errors?.['email']" style="color:red ;">Không đúng định dạng của email!
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Điện thoại:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_phone" type="text" class="form-control"
+								placeholder="Điện thoại">
+							<div *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+								<div *ngIf="phone.errors?.['pattern']" style="color:red ;">Không đúng định dạng số
+									điện thoại!</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Căn cước công dân<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_citizenIdentityCard" type="text" class="form-control"
+								placeholder="Căn cước công dân">
+							<div *ngIf="citizenIdentityCard.invalid && (citizenIdentityCard.dirty || citizenIdentityCard.touched)">
+								<div *ngIf="citizenIdentityCard.errors?.['required']" style="color:red ;">Căn cước công dân không được rỗng
+								</div>
+								<div *ngIf="citizenIdentityCard.errors?.['minlength']" style="color:red ;">
+									Căn cước công dân phải đúng 12 số
+								</div>
+								<div *ngIf="citizenIdentityCard.errors?.['maxlength']" style="color:red ;">
+									Căn cước công dân phải đúng 12 số
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" (click)="closeModal()">Đóng</button>
+					<button type="submit" class="btn btn-primary" [disabled]="frmUser.invalid">Lưu lại</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- /large modal -->

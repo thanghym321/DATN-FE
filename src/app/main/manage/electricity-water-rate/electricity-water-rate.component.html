@@ -1,0 +1,175 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Quản lý</span> - Quản lý điện nước</h4>
+		</div>
+
+		<div class="heading-elements">
+			<div class="heading-btn-group">
+				<a (click)="createModal()" class="btn btn-link btn-float has-text"><i
+						class="icon-plus22 text-primary"></i><span>Thêm giá điện nước</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a [routerLink]="['']"><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Quản lý điện nước</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+<!-- Content area -->
+<div class="content">
+
+	<!-- Basic datatable -->
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-11">
+          <h5 class="panel-title">DANH SÁCH THÔNG TIN ĐIỆN NƯỚC</h5>
+        </div>
+        <div class="col-lg-1">
+          <select class="form-control" (ngModelChange)="loadPageSize($event)" [(ngModel)]="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+					<th width="50px;">STT</th>
+					<th>Loại</th>
+          <th>Bậc</th>
+					<th>Số lượng sử dụng</th>
+					<th>Đơn vị tính</th>
+					<th>Đơn giá</th>
+					<th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_electricityWaterRate | paginate: {itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalElectricityWaterRate}; let i = index">
+					<td>{{ pageSize * (pageIndex - 1) + (i + 1)}}</td>
+					<td>{{item.type}}</td>
+          <td>{{item.tier}}</td>
+					<td>{{item.startAmount}}-{{item.endAmount}}</td>
+					<td [innerHTML]="item.unit"></td>
+					<td>{{item.price | currency: 'đ'}}</td>
+					<td>
+            <tr>
+              <td><button  class="btn btn-info" (click)="openUpdateModal(item.id)"><i class="icon-pencil7"></i></button></td>
+              <td><button style="margin-left:10px;"  class="btn btn-danger" (click)="onRemove(item.id)"><i class="icon-trash"></i></button></td>
+            </tr>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+    <div style="text-align: right;">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="loadPageIndex($event)">
+      </pagination-controls>
+    </div>
+	</div>
+	<!-- /basic datatable -->
+
+</div>
+<!-- /content area -->
+
+<!-- Large modal -->
+<div *ngIf="showUpdateModal" class="modal fade" id="createModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="modal-title">{{title}}</h5>
+			</div>
+			<hr>
+			<form *ngIf="doneSetupForm" [formGroup]="frmElectricityWaterRate" (ngSubmit)="OnSubmit(frmElectricityWaterRate.value)"
+				class="form-horizontal">
+				<div class="modal-body" style="padding-left: 50px !important; padding-right:50px !important;">
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Loại<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<label class="radio-inline">
+								<input formControlName="txt_type" type="radio" class="styled" value="Điện">
+								Điện
+							</label>
+
+							<label class="radio-inline">
+								<input formControlName="txt_type" type="radio" class="styled"value="Nước">
+								Nước
+							</label>
+              <div *ngIf="type.invalid && (type.dirty || type.touched)">
+								<div *ngIf="type.errors?.['required']" style="color:red ;">Loại không được rỗng</div>
+						  </div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Bậc<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_tier" type="number" class="form-control" placeholder="Bậc">
+              <div *ngIf="tier.invalid && (tier.dirty || tier.touched)">
+								<div *ngIf="tier.errors?.['min']" style="color:red ;">Bậc phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Số lượng bắt đầu<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_startAmount" type="number" class="form-control" placeholder="Số lượng bắt đầu">
+              <div *ngIf="startAmount.invalid && (startAmount.dirty || startAmount.touched)">
+								<div *ngIf="startAmount.errors?.['min']" style="color:red ;">Số lượng bắt đầu phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Số lượng kết thúc<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_endAmount" type="number" class="form-control" placeholder="Số lượng kết thúc">
+              <div *ngIf="endAmount.invalid && (endAmount.dirty || endAmount.touched)">
+								<div *ngIf="endAmount.errors?.['min']" style="color:red ;">Số lượng kết thúc phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Đơn vị tính<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<label class="radio-inline">
+								<input formControlName="txt_unit" type="radio" class="styled" value="Số điện (kWh)">
+								Số điện (kWh)
+							</label>
+							<label class="radio-inline">
+								<input formControlName="txt_unit" type="radio" class="styled"value="Khối (m<sup>3</sup>)">
+								Khối (m<sup>3</sup>)
+							</label>
+              <div *ngIf="unit.invalid && (unit.dirty || unit.touched)">
+								<div *ngIf="unit.errors?.['required']" style="color:red ;">Đơn vị tính không được rỗng</div>
+						  </div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Đơn giá:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_price" type="number" class="form-control" placeholder="Đơn giá">
+							<div *ngIf="price.invalid && (price.dirty || price.touched)">
+								<div *ngIf="price.errors?.['min']" style="color:red ;">Đơn giá phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" (click)="closeModal()">Đóng</button>
+					<button type="submit" class="btn btn-primary" [disabled]="frmElectricityWaterRate.invalid">Lưu lại</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- /large modal -->

@@ -1,0 +1,143 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Quản lý</span> - Quản lý dịch vụ</h4>
+		</div>
+
+		<div class="heading-elements">
+			<div class="heading-btn-group">
+				<a (click)="createModal()" class="btn btn-link btn-float has-text"><i
+						class="icon-plus22 text-primary"></i><span>Thêm giá dịch vụ</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a [routerLink]="['']"><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Quản lý dịch vụ</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+<!-- Content area -->
+<div class="content">
+
+	<!-- Basic datatable -->
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-11">
+          <h5 class="panel-title">DANH SÁCH THÔNG TIN DỊCH VỤ</h5>
+        </div>
+        <div class="col-lg-1">
+          <select class="form-control" (ngModelChange)="loadPageSize($event)" [(ngModel)]="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+					<th width="50px;">STT</th>
+					<th>Tên</th>
+					<th>Mô tả</th>
+					<th>Đơn vị tính</th>
+					<th>Đơn giá</th>
+					<th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_service | paginate: {itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalService}; let i = index">
+					<td>{{ pageSize * (pageIndex - 1) + (i + 1)}}</td>
+					<td>{{item.name}}</td>
+					<td [innerHTML]="item.description"></td>
+					<td>{{item.unit}}</td>
+					<td>{{item.price}}</td>
+					<td>
+            <tr>
+              <td><button  class="btn btn-info" (click)="openUpdateModal(item.id)"><i class="icon-pencil7"></i></button></td>
+              <td><button style="margin-left:10px;"  class="btn btn-danger" (click)="onRemove(item.id)"><i class="icon-trash"></i></button></td>
+            </tr>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+    <div style="text-align: right;">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="loadPageIndex($event)">
+      </pagination-controls>
+    </div>
+	</div>
+	<!-- /basic datatable -->
+
+</div>
+<!-- /content area -->
+
+<!-- Large modal -->
+<div *ngIf="showUpdateModal" class="modal fade" id="createModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="modal-title">{{title}}</h5>
+			</div>
+			<hr>
+			<form *ngIf="doneSetupForm" [formGroup]="frmService" (ngSubmit)="OnSubmit(frmService.value)"
+				class="form-horizontal">
+				<div class="modal-body" style="padding-left: 50px !important; padding-right:50px !important;">
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Tên dịch vụ<span style="color:red ;">*</span></label>
+						<div class="col-lg-9">
+							<input formControlName="txt_name" type="text" class="form-control" placeholder="Tên dịch vụ">
+							<div *ngIf="name.invalid && (name.dirty || name.touched)">
+								<div *ngIf="name.errors?.['required']" style="color:red ;">Tên dịch vụ không được rỗng</div>
+								<div *ngIf="name.errors?.['minlength']" style="color:red ;">
+									Tên dịch vụ không được nhỏ hơn 3 ký tự
+								</div>
+								<div *ngIf="name.errors?.['maxlength']" style="color:red ;">
+									Tên dịch vụ không được lớn hơn 250 ký tự
+								</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Mô tả<span style="color:red ;">*</span></label>
+						<div class="col-lg-9">
+              <ckeditor formControlName="txt_description" [editor]="Editor" ></ckeditor>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Đơn vị tính<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_unit" type="text" class="form-control" placeholder="Đơn vị tính">
+              <div *ngIf="unit.invalid && (unit.dirty || unit.touched)">
+								<div *ngIf="unit.errors?.['required']" style="color:red ;">Đơn vị tính không được rỗng</div>
+						  </div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Đơn giá:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_price" type="number" class="form-control" placeholder="Đơn giá">
+							<div *ngIf="price.invalid && (price.dirty || price.touched)">
+								<div *ngIf="price.errors?.['min']" style="color:red ;">Đơn giá phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" (click)="closeModal()">Đóng</button>
+					<button type="submit" class="btn btn-primary" [disabled]="frmService.invalid">Lưu lại</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- /large modal -->

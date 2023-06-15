@@ -1,0 +1,194 @@
+<body class="login-container  pace-done"><div class="pace  pace-inactive"><div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+  <div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div></div>
+
+	<!-- Page container -->
+	<div class="page-container" style="min-height:698.3999977111816px">
+
+		<!-- Page content -->
+		<div class="page-content">
+
+			<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Content area -->
+				<div class="content">
+          <div class="panel panel-flat col-md-8 col-md-offset-2">
+						<div class="panel-heading">
+							<h5 class="panel-title">Thông tin đăng ký<a class="heading-elements-toggle"><i class="icon-more"></i></a></h5>
+							<div class="heading-elements">
+								<ul class="icons-list">
+			                		<li><a data-action="collapse"></a></li>
+			                		<li><a data-action="reload"></a></li>
+			                		<li><a data-action="close"></a></li>
+			                	</ul>
+		                	</div>
+						</div>
+
+						<div class="panel-body">
+              <form [formGroup]="frmUser" (ngSubmit)="OnSubmit(frmUser.value)"
+              class="form-horizontal">
+              <div class="modal-body" style="padding-left: 50px !important; padding-right:50px !important;">
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Tài khoản<span style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_userName" type="text" class="form-control"
+                      placeholder="Tài khoản">
+                    <div *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+                      <div *ngIf="userName.errors?.['required']" style="color:red ;">Tài khoản không được rỗng
+                      </div>
+                      <div *ngIf="userName.errors?.['minlength']" style="color:red ;">
+                        Tài khoản không được nhỏ hơn 5 ký tự
+                      </div>
+                      <div *ngIf="userName.errors?.['maxlength']" style="color:red ;">
+                        Tài khoản không được lớn hơn 50 ký tự
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Mật khẩu<span style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_passWord" type="password" class="form-control"
+                      placeholder="Mật khẩu">
+                    <div *ngIf="passWord.invalid && (passWord.dirty || passWord.touched)">
+                      <div *ngIf="passWord.errors?.['required']" style="color:red ;">Mật khẩu là bắt buộc</div>
+                      <div *ngIf="passWord.errors?.['passWord']" style="color:red ;"> Độ dài mật khẩu tối thiệu
+                        phải là 6 ký tự và
+                        phải chứa ký tự đặc biệt @#!$%&*</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Nhập lại mật khẩu<span
+                      style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_rewrite_Password" type="password" class="form-control"
+                      placeholder="Nhập lại mật khẩu">
+                    <div *ngIf="rewrite_Password.invalid && (rewrite_Password.dirty || rewrite_Password.touched)">
+                      <div *ngIf="rewrite_Password.errors?.['required']" style="color:red ;">Xác nhận lại mật
+                        khẩu là bắt buộc</div>
+                      <div *ngIf="rewrite_Password.errors?.['matching']" style="color:red ;">Xác thực lại mật
+                        khẩu không đúng</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Họ tên<span style="color:red ;">*</span></label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_name" type="text" class="form-control" placeholder="Họ tên">
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)">
+                      <div *ngIf="name.errors?.['required']" style="color:red ;">Họ tên không được rỗng</div>
+                      <div *ngIf="name.errors?.['minlength']" style="color:red ;">
+                        Họ tên không được nhỏ hơn 3 ký tự
+                      </div>
+                      <div *ngIf="name.errors?.['maxlength']" style="color:red ;">
+                        Họ tên không được lớn hơn 250 ký tự
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Ngày sinh<span style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_dateOfBirth" type="date" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Giới tính<span style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <label class="radio-inline">
+                      <input formControlName="txt_gender" type="radio" class="styled" value="Nam">
+                      Nam
+                    </label>
+
+                    <label class="radio-inline">
+                      <input formControlName="txt_gender" type="radio" class="styled"value="Nữ">
+                      Nữ
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Ảnh:</label>
+                  <div class="col-lg-9">
+                    <div class="media no-margin-top">
+                      <div class="media-left">
+                        <img  src="{{avatarPreview}}" style="width: 58px; height: 58px;" class="img-rounded" alt="">
+                      </div>
+                      <div class="media-body">
+                        <input (change)="upload($event)" accept=".jpg,.png,.jpeg,.gif,.bmp,.tif,.tiff"
+                          type="file" class="file-styled">
+                        <span class="help-block">Định dạng được chấp nhận: gif, png, jpg. Kích thước tệp tối đa 2Mb</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Địa chỉ:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_address" type="text" class="form-control" placeholder="Địa chỉ">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Email:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_email" type="text" class="form-control" placeholder="Email">
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                      <div *ngIf="email.errors?.['email']" style="color:red ;">Không đúng định dạng của email!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Điện thoại:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_phone" type="text" class="form-control"
+                      placeholder="Điện thoại">
+                    <div *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+                      <div *ngIf="phone.errors?.['pattern']" style="color:red ;">Không đúng định dạng số
+                        điện thoại!</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Căn cước công dân<span style="color:red ;">*</span>:</label>
+                  <div class="col-lg-9">
+                    <input formControlName="txt_citizenIdentityCard" type="text" class="form-control"
+                      placeholder="Căn cước công dân">
+                    <div *ngIf="citizenIdentityCard.invalid && (citizenIdentityCard.dirty || citizenIdentityCard.touched)">
+                      <div *ngIf="citizenIdentityCard.errors?.['required']" style="color:red ;">Căn cước công dân không được rỗng
+                      </div>
+                      <div *ngIf="citizenIdentityCard.errors?.['minlength']" style="color:red ;">
+                        Căn cước công dân phải đúng 12 số
+                      </div>
+                      <div *ngIf="citizenIdentityCard.errors?.['maxlength']" style="color:red ;">
+                        Căn cước công dân phải đúng 12 số
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="frmUser.invalid">Đăng ký</button>
+              </div>
+            </form>
+						</div>
+					</div>
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+		</div>
+		<!-- /page content -->
+
+	</div>
+	<!-- /page container -->
+
+
+
+</body>

@@ -1,0 +1,62 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4>Danh sách chờ duyệt</h4>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a [routerLink]="['']"><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Danh sách chờ duyệt</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+<!-- Content area -->
+<div class="content">
+
+	<!-- Basic datatable -->
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-12">
+          <h5 class="panel-title">DANH SÁCH CHỜ DUYỆT</h5>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+					<th width="50px;">STT</th>
+					<th>Tên phòng</th>
+          <th>Tên sinh viên</th>
+					<th>Ảnh</th>
+					<th>Email</th>
+					<th>Ngày đăng ký</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_roomRegistration let i = index">
+          <td>{{i+1}}</td>
+					<td>{{item.roomName}}</td>
+          <td>{{item.name}}</td>
+          <td><img src="{{item.avatar}}" height="100%;" width="100px" alt=""></td>
+					<td>{{item.email}}</td>
+					<td>{{item.dateRegistration | date:'dd-MM-yyyy'}}</td>
+					<td>{{item.status | statusLabel: statusMapping}}</td>
+          <td>
+            <button class="btn btn-primary" (click)="confirm(item.id)">Duyệt</button>
+          </td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- /basic datatable -->
+
+</div>
+<!-- /content area -->

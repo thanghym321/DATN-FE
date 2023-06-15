@@ -1,0 +1,142 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4>Quản lý đăng ký</h4>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a [routerLink]="['']"><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Quản lý đăng ký</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+<!-- Content area -->
+<div class="content">
+
+	<!-- Basic datatable -->
+	<div class="panel panel-flat">
+    <div class="row">
+      <div class="col-md-12">
+
+        <!-- Basic layout-->
+        <form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadRoomRegistration()" >
+          <div class="panel panel-flat">
+            <div class="panel-heading">
+              <h5 class="panel-title">Tìm kiếm</h5>
+            </div>
+
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="col-lg-1 control-label" style="text-align:right ;">Họ Tên:</label>
+                <div class="col-lg-2">
+                  <input formControlName="txt_name" type="text" class="form-control" placeholder="Tên">
+                </div>
+                <label class="col-lg-1 control-label" style="text-align:right ;">Tháng:</label>
+                <div class="col-lg-2">
+                  <input formControlName="txt_month" type="text" class="form-control" placeholder="Tháng">
+                </div>
+                <label class="col-lg-1 control-label" style="text-align:right ;">Năm:</label>
+                <div class="col-lg-2">
+                  <input formControlName="txt_year" type="text" class="form-control" placeholder="Năm">
+                </div>
+                <label class="col-lg-1 control-label" style="text-align:right ;">Trạng thái:</label>
+                <div class="col-lg-2">
+                  <select formControlName="txt_status" class="form-control">
+                    <option [value]="-1" selected>Tất cả</option>
+                    <option [value]="0">Đã duyệt</option>
+                    <option [value]="1">Đang chờ chuyệt</option>
+                    <option [value]="2">Đã rời phòng</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+
+                <label class="col-lg-1 control-label" style="text-align:right ;">Cơ sở:</label>
+                <div class="col-lg-2">
+                  <select formControlName="txt_campus" class="form-control">
+                    <option [value]="-1" selected>Tất cả</option>
+                    <option [value]="item.id" *ngFor="let item of list_campus">{{item.name}}</option>
+                  </select>
+                </div>
+                <label class="col-lg-1 control-label" style="text-align:right ;">Toà nhà :</label>
+                <div class="col-lg-2">
+                  <select formControlName="txt_building" class="form-control">
+                    <option [value]="-1" selected>Tất cả</option>
+                    <option [value]="item.id" *ngFor="let item of list_building">{{item.name}}</option>
+                  </select>
+                </div>
+                <label class="col-lg-1 control-label" style="text-align:right ;">Sắp xếp:</label>
+                <div class="col-lg-2">
+                  <select formControlName="txt_filter" class="form-control">
+                    <option [value]="''" selected>Tất cả</option>
+                    <option [value]="'new'">Ngày mới nhất</option>
+                    <option [value]="'old'">Ngày cũ nhất</option>
+                  </select>
+                </div>
+                <div class="col-lg-3 text-right">
+                  <button style="width: 180px;" type="submit" class="btn btn-primary"><i class="icon-search4 position-right"></i> Tìm kiếm</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- /basic layout -->
+      </div>
+    </div>
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-11">
+          <h5 class="panel-title">DANH SÁCH ĐĂNG KÝ</h5>
+        </div>
+        <div class="col-lg-1">
+          <select class="form-control" (ngModelChange)="loadPageSize($event)" [(ngModel)]="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+					<th width="50px;">STT</th>
+					<th>Tên phòng</th>
+          <th>Tên sinh viên</th>
+					<th>Ảnh</th>
+					<th>Email</th>
+					<th>Ngày đăng ký</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_roomRegistration | paginate: {itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRoomRegistration}; let i = index">
+          <td>{{i+1}}</td>
+					<td>{{item.roomName}}</td>
+          <td>{{item.name}}</td>
+          <td><img src="{{item.avatar}}" height="100%;" width="100px" alt=""></td>
+					<td>{{item.email}}</td>
+					<td>{{item.dateRegistration | date:'dd-MM-yyyy'}}</td>
+					<td>{{item.status | statusLabel: statusMapping}}</td>
+          <td>
+            <button *ngIf="item.status==1" class="btn btn-primary" (click)="confirm(item.id)">Duyệt</button>
+          </td>
+				</tr>
+			</tbody>
+		</table>
+    <div style="text-align: right;">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="loadPageIndex($event)">
+      </pagination-controls>
+    </div>
+	</div>
+	<!-- /basic datatable -->
+
+</div>
+<!-- /content area -->

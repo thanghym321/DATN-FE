@@ -1,0 +1,211 @@
+<!-- Page header -->
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Quản lý</span> - Quản lý phòng</h4>
+		</div>
+
+		<div class="heading-elements">
+			<div class="heading-btn-group">
+				<a (click)="createModal()" class="btn btn-link btn-float has-text"><i
+						class="icon-plus22 text-primary"></i><span>Thêm phòng</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+			<li><a [routerLink]="['']"><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+			<li class="active">Quản lý phòng</li>
+		</ul>
+	</div>
+</div>
+<!-- /page header -->
+
+<!-- Content area -->
+<div class="content">
+<!-- Basic layout-->
+<form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadRoom()" >
+  <div class="panel panel-flat">
+    <div class="panel-heading">
+      <h5 class="panel-title">Tìm kiếm</h5>
+    </div>
+
+    <div class="panel-body">
+      <div class="form-group">
+        <label class="col-lg-1 control-label" style="text-align:right ;">Giá từ:</label>
+        <div class="col-lg-2">
+          <input formControlName="txt_low" type="text" class="form-control" placeholder="Giá thấp">
+        </div>
+        <label class="col-lg-1 control-label" style="text-align:right ;">Đến:</label>
+        <div class="col-lg-2">
+          <input formControlName="txt_high" type="text" class="form-control" placeholder="Giá cao">
+        </div>
+        <label class="col-lg-1 control-label" style="text-align:right ;">Cơ sở:</label>
+        <div class="col-lg-2">
+          <select formControlName="txt_campus" class="form-control">
+            <option [value]="-1" selected>Tất cả</option>
+            <option [value]="item.id" *ngFor="let item of list_campus">{{item.name}}</option>
+          </select>
+        </div>
+        <label class="col-lg-1 control-label" style="text-align:right ;">Toà nhà :</label>
+        <div class="col-lg-2">
+          <select formControlName="txt_building" class="form-control">
+            <option [value]="-1" selected>Tất cả</option>
+            <option [value]="item.id" *ngFor="let item of list_building">{{item.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-1 control-label" style="text-align:right ;">Trạng thái:</label>
+        <div class="col-lg-2">
+          <select formControlName="txt_status" class="form-control">
+            <option [value]="-1" selected>Tất cả</option>
+            <option [value]="0">Phòng đã đầy</option>
+            <option [value]="1">Phòng còn trống</option>
+          </select>
+        </div>
+        <div class="col-lg-4 text-right">
+          <button style="width: 230px;" type="submit" class="btn btn-primary"><i class="icon-search4 position-right"></i> Tìm kiếm</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
+<!-- /basic layout -->
+	<!-- Basic datatable -->
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+      <div class="row">
+        <div class="col-lg-11">
+          <h5 class="panel-title">DANH SÁCH THÔNG TIN PHÒNG</h5>
+        </div>
+        <div class="col-lg-1">
+          <select class="form-control" (ngModelChange)="loadPageSize($event)" [(ngModel)]="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+		</div>
+
+		<table class="table datatable-basic">
+			<thead>
+				<tr>
+					<th width="50px;">STT</th>
+					<th>Tòa nhà</th>
+          <th>Tên phòng</th>
+					<th>Loại phòng</th>
+					<th>Số giường</th>
+					<th>Giá</th>
+          <th>Trạng thái</th>
+					<th>Hành động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of list_room | paginate: {itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRoom}; let i = index">
+					<td>{{ pageSize * (pageIndex - 1) + (i + 1)}}</td>
+					<td>{{item.buildingName}}</td>
+          <td>{{item.name}}</td>
+					<td>{{item.type}}</td>
+					<td>{{item.bed}}</td>
+					<td>{{item.price | currency:'đ'}}</td>
+					<td>{{item.status | statusLabel: statusMapping}}</td>
+          <td>
+            <tr>
+              <td><button  class="btn btn-info" (click)="openUpdateModal(item.id)"><i class="icon-pencil7"></i></button></td>
+              <td><button style="margin-left:10px;"  class="btn btn-danger" (click)="onRemove(item.id)"><i class="icon-trash"></i></button></td>
+            </tr>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+    <div style="text-align: right;">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="loadPageIndex($event)">
+      </pagination-controls>
+    </div>
+	</div>
+	<!-- /basic datatable -->
+
+</div>
+<!-- /content area -->
+
+<!-- Large modal -->
+<div *ngIf="showUpdateModal" class="modal fade" id="createModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="modal-title">{{title}}</h5>
+			</div>
+			<hr>
+			<form *ngIf="doneSetupForm" [formGroup]="frmRoom" (ngSubmit)="OnSubmit(frmRoom.value)"
+				class="form-horizontal">
+				<div class="modal-body" style="padding-left: 50px !important; padding-right:50px !important;">
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Tòa nhà<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<select formControlName="txt_building" class="form-control">
+                <option selected value=null>Không</option>
+                <option *ngFor="let item of list_building" value="{{item.id}}">{{item.name}}</option>
+              </select>
+              <div *ngIf="building.invalid && (building.dirty || building.touched)">
+                <div *ngIf="building.errors?.['required']" style="color:red ;">Bạn phải chọn tòa nhà</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Tên phòng<span style="color:red ;">*</span>:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_name" type="text" class="form-control" placeholder="Tên tòa nhà">
+							<div *ngIf="name.invalid && (name.dirty || name.touched)">
+								<div *ngIf="name.errors?.['required']" style="color:red ;">Tên phòng không được rỗng</div>
+								<div *ngIf="name.errors?.['minlength']" style="color:red ;">
+									Tên phòng không được nhỏ hơn 3 ký tự
+								</div>
+								<div *ngIf="name.errors?.['maxlength']" style="color:red ;">
+									Tên phòng không được lớn hơn 250 ký tự
+								</div>
+						  </div>
+					  </div>
+          </div>
+					<div class="form-group">
+						<label class="col-lg-3 control-label">Loại phòng:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_type" type="text" class="form-control" placeholder="Loại phòng">
+						  </div>
+					 </div>
+           <div class="form-group">
+						<label class="col-lg-3 control-label">Số giường:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_bed" type="number" class="form-control"
+								placeholder="Số giường">
+							<div *ngIf="bed.invalid && (bed.dirty || bed.touched)">
+								<div *ngIf="bed.errors?.['min']" style="color:red ;">Số giường phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+          <div class="form-group">
+						<label class="col-lg-3 control-label">Giá:</label>
+						<div class="col-lg-9">
+							<input formControlName="txt_Price" type="number" class="form-control"
+								placeholder="Giá phòng">
+							<div *ngIf="Price.invalid && (Price.dirty || Price.touched)">
+								<div *ngIf="Price.errors?.['pattern']" style="color:red ;">Giá phải lớn hơn 0</div>
+							</div>
+						</div>
+					</div>
+        </div>
+				<hr>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" (click)="closeModal()">Đóng</button>
+					<button type="submit" class="btn btn-primary" [disabled]="frmRoom.invalid">Lưu lại</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- /large modal -->

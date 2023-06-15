@@ -1,0 +1,177 @@
+<div class="content-wrapper">
+
+  <!-- Page header -->
+  <div class="page-header page-header-default">
+    <div class="page-header-content">
+      <div class="page-title">
+        <h4> <span class="text-semibold">Thống kê</span></h4>
+      <a class="heading-elements-toggle"><i class="icon-more"></i></a></div>
+
+    </div>
+
+    <div class="breadcrumb-line"><a class="breadcrumb-elements-toggle"><i class="icon-menu-open"></i></a>
+      <ul class="breadcrumb">
+        <li><a href=""><i class="icon-home2 position-left"></i> Trang chủ</a></li>
+        <li><a href="">Thống kê</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /page header -->
+
+
+  <!-- Content area -->
+  <div class="content">
+
+    <!-- Simple statistics -->
+
+    <div class="row">
+      <div class="col-sm-6 col-md-2">
+        <div class="panel panel-body panel-body-accent bg-blue-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số cơ sở</span>
+              <h3 class="no-margin text-semibold">{{TotalCampus}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-2">
+        <div class="panel panel-body bg-danger-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số tòa nhà</span>
+              <h3 class="no-margin text-semibold">{{TotalBuilding}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-5">
+        <div class="panel panel-body bg-success-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số phòng</span>
+              <h3 class="no-margin text-semibold">{{Room.totalRoom}}</h3>
+            </div>
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số phòng còn trống</span>
+              <h3 class="no-margin text-semibold">{{Room.availableRoom}}</h3>
+            </div>
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số phòng đã đầy</span>
+              <h3 class="no-margin text-semibold">{{Room.fullRoom}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-3">
+        <div class="panel panel-body  bg-blue-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-left media-middle">
+              <i class="icon-user icon-3x text-red-400"></i>
+            </div>
+
+            <div class="media-body text-center">
+              <span class="text-uppercase text-size-mini text-muted">Số sinh viên</span>
+              <h3 class="no-margin text-semibold">{{TotalStudent}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-3">
+        <div class="panel panel-body bg-danger-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <h3 class="no-margin">{{Invoice.totalInvoice}}</h3>
+              <span class="text-uppercase text-size-mini">Số hóa đơn</span>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="panel panel-body bg-success-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <span class="text-uppercase text-size-mini">Số  hóa đơn chưa thanh toán</span>
+
+              <h3 class="no-margin">{{Invoice.totalInvoiceUnpaid}}</h3>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="panel panel-body bg-danger-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <span class="text-uppercase text-size-mini">Số hóa đơn đã thanh toán</span>
+              <h3 class="no-margin">{{Invoice.totalInvoicePaid}}</h3>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="panel panel-body bg-blue-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <span class="text-uppercase text-size-mini">Tổng tiền nước</span>
+
+              <h3 class="no-margin">{{Invoice.totalWaterPrice |currency: 'VND'}}</h3>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="panel panel-body bg-blue-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <span class="text-uppercase text-size-mini">Tổng tiền điện</span>
+
+              <h3 class="no-margin">{{Invoice.totalElecPrice |currency: 'VND'}}</h3>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="panel panel-body bg-blue-400 has-bg-image">
+          <div class="media no-margin">
+            <div class="media-body">
+              <span class="text-uppercase text-size-mini">Tổng tiền phòng</span>
+
+              <h3 class="no-margin">{{Invoice.totalRoomPrice |currency: 'VND'}}</h3>
+            </div>
+
+            <div class="media-right media-middle">
+              <i class="icon-bag icon-3x opacity-75"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- /simple statistics -->
+
+  </div>
+  <!-- /content area -->
+
+</div>
